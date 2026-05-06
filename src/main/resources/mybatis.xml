@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!--MyBatis配置-->
+<configuration>
+
+
+    <!--Mapper注册-->
+    <mappers>
+        <!--注册Mapper文件的所在位置-->
+        <mapper resource="mapper/CommentsMapper.xml"/>
+        <mapper resource="mapper/ContentsMapper.xml"/>
+        <mapper resource="mapper/FilesMapper.xml"/>
+        <mapper resource="mapper/TypesMapper.xml"/>
+        <mapper resource="mapper/UsersMapper.xml"/>
+    </mappers>
+</configuration>

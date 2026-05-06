@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lh.blog.dao.CommentsMapper" >
+  <resultMap id="BaseResultMap" type="Comments" >
+    <id column="coid" property="coid" jdbcType="INTEGER" />
+    <result column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="text" property="text" jdbcType="LONGVARCHAR" />
+    <result column="mail" property="mail" jdbcType="VARCHAR" />
+    <result column="created" property="created" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <association property="contents" resultMap="com.lh.blog.dao.ContentsMapper.BaseResultMap"></association>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    coid, cid, name,text, mail, created, status
+  </sql>
+
+  <select id="selectByPager" resultMap="BaseResultMap">
+select c.*, p.*
+from comments c,contents p
+where c.cid = p.cid
+  </select>
+
+  <select id="selectUserByPager" resultMap="BaseResultMap">
+    select c.*, p.*
+    from comments c,contents p
+    where c.cid = p.cid and c.name=#{username}
+  </select>
+
+  <select id="queryAll1" resultMap="BaseResultMap">
+    select *
+    from comments
+  </select>
+  <select id="selectNewByPager" resultMap="BaseResultMap">
+    select c.*, p.*
+    from comments c,contents p
+    where c.cid = p.cid and c.status='1'
+    order by c.created desc
+  </select>
+
+  <select id="queryAllByCid" resultMap="BaseResultMap">
+    select *
+    from comments
+    where cid=#{cid} and status='1'
+    order by created desc
+  </select>
+</mapper>

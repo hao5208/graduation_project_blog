@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lh.blog.dao.ContentsMapper" >
+  <resultMap id="BaseResultMap" type="com.lh.blog.pojo.Contents" >
+    <id column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="text" property="text" jdbcType="LONGVARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="created" property="created" jdbcType="TIMESTAMP" />
+    <result column="modified" property="modified" jdbcType="TIMESTAMP" />
+    <result column="readingcount" property="readingcount" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <association property="types" resultMap="com.lh.blog.dao.TypesMapper.BaseResultMap"></association>
+    <association property="users" resultMap="com.lh.blog.dao.UsersMapper.BaseResultMap"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cid, title,text, type, uid, created, modified, readingcount, status
+  </sql>
+  <select id="queryConByPager" resultMap="BaseResultMap">
+    SELECT cn.*,ty.name,us.username
+    FROM contents cn,types ty,users us
+    WHERE cn.type=ty.mid AND cn.uid=us.uid
+    ORDER BY created DESC
+  </select>
+
+  <select id="queryuserConByPager" resultMap="BaseResultMap">
+    SELECT cn.*,ty.name,us.username
+    FROM contents cn,types ty,users us
+    WHERE cn.type=ty.mid AND cn.uid=us.uid and cn.uid=#{uid}
+    ORDER BY created DESC
+  </select>
+
+  <select id="queryConByCid" resultMap="BaseResultMap">
+    select c.*,u.username,t.name
+    from contents c,users u,types t
+    where cid=#{cid} and c.uid=u.uid and c.type=t.mid
+  </select>
+
+  <select id="queryNewContents" resultMap="BaseResultMap">
+    SELECT cn.*,ty.name,us.username
+    FROM contents cn,types ty,users us
+    WHERE cn.type=ty.mid AND cn.uid=us.uid and cn.status='1'
+    ORDER BY created DESC
+  </select>
+
+
+  <select id="queryUpConByCid" resultMap="BaseResultMap">
+    SELECT * FROM contents
+    WHERE cid &lt; (SELECT cid FROM contents WHERE cid = #{cid})
+    ORDER BY cid DESC
+    LIMIT 1;
+  </select>
+
+  <select id="queryDuConByCid" resultMap="BaseResultMap">
+    SELECT * FROM contents
+    WHERE cid > (SELECT cid FROM contents WHERE cid = #{cid})
+    ORDER BY cid ASC
+    LIMIT 1;
+  </select>
+
+  <select id="queryConByType" resultMap="BaseResultMap">
+    select c.*,u.username,t.name
+    from contents c,users u,types t
+    where c.type=#{mid} and c.uid=u.uid and c.type=t.mid
+    ORDER BY created DESC
+  </select>
+
+  <select id="queryConByUser" resultMap="BaseResultMap">
+    select c.*,u.username,t.name
+    from contents c,users u,types t
+    where c.uid=#{uid} and c.uid=u.uid and c.type=t.mid
+    ORDER BY created DESC
+  </select>
+
+
+  <select id="queryConByPagerIndex" resultMap="BaseResultMap">
+    SELECT cn.*,ty.name,us.username
+    FROM contents cn,types ty,users us
+    WHERE cn.type=ty.mid AND cn.uid=us.uid and cn.status='1'
+    ORDER BY created DESC
+  </select>
+
+<!--  <select id="queryRedCount">-->
+<!--    SELECT sum(readingcount)-->
+<!--    FROM contents-->
+<!--  </select>-->
+
+
+
+</mapper>
